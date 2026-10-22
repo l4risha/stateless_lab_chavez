@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 
 void main() => runApp(const DirectoryApp());
 
+// Colors (estimate gikan sa screenshot)
+const kTeal = Color(0xFF0E8A8A); // AppBar, avatar, heading, icons
+const kBackground = Color(0xFFF4F7F7); // background sa screen
+const kNameText = Color(0xFF1F2933); // name sa student
+const kSubText = Color(0xFF6B7280); // course, year, email
+
 // Student = blueprint sa data. Final ang fields, mao nga const ang constructor
 class Student {
   final String name;
@@ -19,11 +25,11 @@ class Student {
 
 // Hard-coded list (5+). Ilisi ang names sa imong mga classmate o kaugalingon
 const List<Student> students = [
-  Student(name: 'Juan Dela Cruz', course: 'BSIT', yearLevel: 3, email: 'juan@csucc.edu.ph'),
-  Student(name: 'Maria Santos', course: 'BSIT', yearLevel: 2, email: 'maria@csucc.edu.ph'),
-  Student(name: 'Pedro Reyes', course: 'BSCS', yearLevel: 1, email: 'pedro@csucc.edu.ph'),
-  Student(name: 'Ana Lopez', course: 'BSIT', yearLevel: 4, email: 'ana@csucc.edu.ph'),
-  Student(name: 'Carlo Mendoza', course: 'BSCE', yearLevel: 2, email: 'carlo@csucc.edu.ph'),
+  Student(name: 'Juan Dela Cruz', course: 'BS Information Technology', yearLevel: 3, email: 'juan@csucc.edu.ph'),
+  Student(name: 'Maria Santos', course: 'BS Information Technology', yearLevel: 2, email: 'maria@csucc.edu.ph'),
+  Student(name: 'Pedro Reyes', course: 'BS Computer Science', yearLevel: 1, email: 'pedro@csucc.edu.ph'),
+  Student(name: 'Ana Lopez', course: 'BS Information Systems', yearLevel: 4, email: 'ana@csucc.edu.ph'),
+  Student(name: 'Carlo Mendoza', course: 'BS Computer Engineering', yearLevel: 2, email: 'carlo@csucc.edu.ph'),
 ];
 
 // Stateless kay ang icon ug text kay gikan sa parent, wala'y mausab sa sulod
@@ -35,12 +41,21 @@ class InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(icon, size: 16),
-        const SizedBox(width: 6), // gamay nga gap tali sa icon ug text
-        Expanded(child: Text(text)), // Expanded para dili mo-overflow ang taas nga email
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: Row(
+        children: [
+          Icon(icon, size: 14, color: kTeal), // teal nga icon
+          const SizedBox(width: 6), // gamay nga gap tali sa icon ug text
+          Expanded(
+            // Expanded para dili mo-overflow ang taas nga email
+            child: Text(
+              text,
+              style: const TextStyle(fontSize: 12, color: kSubText),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -54,18 +69,20 @@ class SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
+              fontSize: 18,
               fontWeight: FontWeight.bold, // bold nga heading
-              color: Theme.of(context).colorScheme.primary, // colored heading
+              color: kTeal, // colored heading
             ),
           ),
-          const Divider(), // linya sa ubos
+          const SizedBox(height: 4),
+          const Divider(height: 1, color: kTeal), // linya sa ubos
         ],
       ),
     );
@@ -81,21 +98,43 @@ class StudentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.white,
+      elevation: 2,
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(14),
         child: Row(
           children: [
-            CircleAvatar(child: Text(student.name[0])), // first letter sa name
-            const SizedBox(width: 12),
+            CircleAvatar(
+              radius: 24,
+              backgroundColor: kTeal,
+              child: Text(
+                student.name[0], // first letter sa name
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     student.name,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: kNameText,
+                    ),
                   ),
-                  Text(student.course),
+                  Text(
+                    student.course,
+                    style: const TextStyle(fontSize: 12, color: kSubText),
+                  ),
                   InfoRow(icon: Icons.school, text: 'Year ${student.yearLevel}'),
                   InfoRow(icon: Icons.email, text: student.email),
                 ],
@@ -115,8 +154,17 @@ class DirectoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Campus Directory')),
+      backgroundColor: kBackground,
+      appBar: AppBar(
+        backgroundColor: kTeal,
+        foregroundColor: Colors.white,
+        title: const Text(
+          'Campus Directory',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
       body: ListView(
+        padding: const EdgeInsets.only(bottom: 16),
         children: [
           const SectionHeader(title: 'Students'),
           // spread (...) para ma-butang ang matag card sa sulod sa ListView
@@ -134,7 +182,8 @@ class DirectoryApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(colorSchemeSeed: Colors.blue, useMaterial3: true),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(colorSchemeSeed: kTeal, useMaterial3: true),
       home: const DirectoryScreen(),
     );
   }
