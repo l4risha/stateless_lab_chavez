@@ -2,4 +2,4 @@
 
 Name: Joseph Denver Chavez
 
-![App screenshot](screenshots/app.png)
+![App screenshot](screenshots/screenshot.png)
